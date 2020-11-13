@@ -1,0 +1,40 @@
+# coding=utf-8
+# --------------------------------------------------------------------
+# Copyright (C) 1991 - 2017 - EDF R&D - www.code-aster.org
+# This file is part of code_aster.
+#
+# code_aster is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# code_aster is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with code_aster.  If not, see <http://www.gnu.org/licenses/>.
+# --------------------------------------------------------------------
+
+# person_in_charge: hassan.berro at edf.fr
+
+from code_aster.Cata.Syntax import *
+from code_aster.Cata.DataStructure import *
+from code_aster.Cata.Commons import *
+
+
+CALC_CHAM_FLUI = OPER(nom="CALC_CHAM_FLUI",op= 116,sd_prod=evol_ther,
+                      fr="Calculer le champ de vitesses et de pression fluides",
+         # Mot-clés obligatoires
+         RIGI_THER   = SIMP(statut='o',typ=matr_asse_temp_r ),
+         EXCIT       = FACT(statut='o',max='**',
+                       CHARGE    = SIMP(statut='o',typ=(char_ther,char_cine_ther)),
+                       FONC_MULT = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule))),
+         POTENTIEL   = SIMP(statut='o',typ='TXM',defaut="DEPL",into=("DEPL","VITE","PRES")),
+         DIST_REFE   = SIMP(statut='o',typ='R',defaut= 1.E-2 ),
+         MODE_MECA   = SIMP(statut='o',typ=mode_meca),
+         b_coefmult       = BLOC(condition  = """exists("MODE_MECA")""",
+                                COEF_MULT    =SIMP(statut='o',typ='R',defaut=(1.0),max='**'),
+                               ),   
+                      )
